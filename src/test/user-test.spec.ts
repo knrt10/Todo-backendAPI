@@ -75,4 +75,17 @@ class UserRouteTest {
       done();
     }, 1000);
   }
+
+  @test("GET User - User Home page route test")
+  public userHomePage(done) {
+    setTimeout(() => {
+      chai.request("http://localhost:" + server.port)
+        .get("/user/")
+        .end((err, res) => {
+          chai.expect(res).to.have.status(200);
+          chai.expect(res.body.msg).to.deep.equal("User home page route working correctly");
+          done();
+        });
+    }, 1000);
+  }
 }

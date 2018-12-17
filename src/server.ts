@@ -10,6 +10,9 @@ import fs = require("fs");
 import mongoose = require("mongoose");
 
 // Importing Routes
+import {
+  UserRoutes,
+} from "./routes";
 
 import { Config } from "./shared";
 global.Promise = bluebird;
@@ -167,6 +170,9 @@ export class Hasura {
     this.app.get("/", (req, res) => {
       res.status(200).send("Yep this check route is working");
     });
+
+    const userRoutes: UserRoutes = new UserRoutes(this.winston);
+    this.app.use("/user", userRoutes.getRoutes());
   }
 
   /**
