@@ -10,6 +10,7 @@ import { Response } from "../models";
  */
 export class BaseRoutes {
   protected router: express.Router = express.Router();
+
   public constructor(protected winston: winston) {
     this.initRoutes();
   }
@@ -27,13 +28,20 @@ export class BaseRoutes {
    * This method intitializes routes
    * @method initRoutes
    */
-  protected initRoutes(): void {
+  protected initRoutes() {
     //
   }
 
+  /**
+   * This method completes request
+   * @param {promise}
+   * @param {res}
+   */
   protected completeRequest(promise: Promise<Response>, res: express.Response): void {
     promise.then((response) => {
-      res.status(response.code).send(response.data);
+      res.status(response.code).send(response);
+    }).catch((errorRes) => {
+      res.status(errorRes.code).send(errorRes);
     });
   }
 }

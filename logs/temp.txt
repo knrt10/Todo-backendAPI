@@ -1,1 +1,6 @@
 This is just an example of log file
+
+{"level":"info","message":"Winston has been init","timestamp":"2018-12-17T05:27:01.205Z"}
+{"level":"info","message":"Mongo Connected!","timestamp":"2018-12-17T05:28:09.064Z"}
+{"level":"info","message":"Express started on (http://localhost:3000/)","timestamp":"2018-12-17T05:28:09.073Z"}
+{"version":"0.0.1","level":"info","message":"hasura-backend startup sequence completed","timestamp":"2018-12-17T05:28:09.079Z"}

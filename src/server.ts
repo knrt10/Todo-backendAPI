@@ -11,6 +11,7 @@ import mongoose = require("mongoose");
 
 // Importing Routes
 import {
+  AuthRoutes,
   UserRoutes,
 } from "./routes";
 
@@ -167,10 +168,11 @@ export class Hasura {
    */
   private initAppRoutes() {
 
-    this.app.get("/", (req, res) => {
-      res.status(200).send("Yep this check route is working");
-    });
+    // auth Routes, for logging in
+    const authRoutes: AuthRoutes = new AuthRoutes(this.winston);
+    this.app.use("/auth", authRoutes.getRoutes());
 
+    // user Routes, registering and rest 2 routes
     const userRoutes: UserRoutes = new UserRoutes(this.winston);
     this.app.use("/user", userRoutes.getRoutes());
   }
