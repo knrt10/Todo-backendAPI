@@ -1,0 +1,19 @@
+version: '3'
+services:
+  web:
+    build: .
+    command: npm start
+    volumes:
+      - .:/usr/src/
+      - /usr/src/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+       - mongodb
+
+  mongodb:
+     image: mongo
+     ports:
+       - "27017:27017"
+     volumes:
+       - ./data:/data/db
