@@ -5,7 +5,6 @@
 export const Config = {
   apiSettings: {
     host: process.env.API_HOST || "localhost",
-    port: process.env.API_PORT || 3000,
   },
   dbSettings: {
     authEnabled: process.env.MONGO_AUTH || false,

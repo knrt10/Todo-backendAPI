@@ -28,21 +28,20 @@ mongoose.Promise = global.Promise;
  */
 export class Hasura {
   public infoString: string;
+  public port: any;
   private pkg = require("../package.json"); // information about package version
   private winston: any = require("winston"); // for logging
   private app: any; // express server
-  private envReady: boolean = false;
-  constructor(private hasDb = true) {
-    if (hasDb) {
-      if (Config.dbSettings.authEnabled) {
-        this.infoString = "mongodb://" + Config.dbSettings.username + ":" + Config.dbSettings.password + "@"
-          + Config.dbSettings.connectionString + "/" + Config.dbSettings.database;
-      } else if (Config.dbSettings.localDatabase) {
-        this.infoString = "mongodb://" + Config.dbSettings.connectionString + "/" + Config.dbSettings.database;
-      } else {
-        this.infoString = "mongodb://" + Config.dbSettings.dockerconnectionString + "/" + Config.dbSettings.database;
-      }
+  constructor(private portGiven) {
+    if (Config.dbSettings.authEnabled) {
+      this.infoString = "mongodb://" + Config.dbSettings.username + ":" + Config.dbSettings.password + "@"
+        + Config.dbSettings.connectionString + "/" + Config.dbSettings.database;
+    } else if (Config.dbSettings.localDatabase) {
+      this.infoString = "mongodb://" + Config.dbSettings.connectionString + "/" + Config.dbSettings.database;
+    } else {
+      this.infoString = "mongodb://" + Config.dbSettings.dockerconnectionString + "/" + Config.dbSettings.database;
     }
+    this.port = portGiven;
   }
 
   /**
@@ -51,22 +50,20 @@ export class Hasura {
    */
   public startServer() {
     this.initEnv().then(() => {
-      // logs/ Folder created succesfully
-      if (this.envReady) {
-        // Initilatizing the winston as per documentation
-        this.initWinston();
+      // logs/ Folder already
+      // Initilatizing the winston as per documentation
+      this.initWinston();
 
-        this.initServices().then(() => {
+      this.initServices().then(() => {
 
-          // start the express server(s)
-          this.initExpress();
+        // start the express server(s)
+        this.initExpress();
 
-          // all done
-          this.winston.info(this.pkg.name + " startup sequence completed", {
-            version: this.pkg.version,
-          });
+        // all done
+        this.winston.info(this.pkg.name + " startup sequence completed", {
+          version: this.pkg.version,
         });
-      }
+      });
     });
   }
 
@@ -79,7 +76,6 @@ export class Hasura {
     return new Promise<void>((resolve) => {
       const logPath: string = Config.serviceSettings.logsDir;
       fs.stat(logPath, (err) => {
-        this.envReady = true;
         resolve();
       });
     });
@@ -150,8 +146,8 @@ export class Hasura {
     this.initAppRoutes();
 
     // and start!
-    this.app.listen(Config.apiSettings.port);
-    this.winston.info("Express started on (http://localhost:" + Config.apiSettings.port + "/)");
+    this.app.listen(this.port);
+    this.winston.info("Express started on (http://localhost:" + this.port + "/)");
   }
 
   /**
@@ -184,9 +180,6 @@ export class Hasura {
       mongoose.connect(this.infoString, { useNewUrlParser: true }).then(() => {
         this.winston.info("Mongo Connected!");
         resolve(true);
-      }).catch(() => {
-        this.winston.error("Cannot connect to database " + this.infoString);
-        reject(false);
       });
     });
   }
