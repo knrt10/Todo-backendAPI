@@ -6,11 +6,11 @@ import { model } from "mongoose";
 import sinon = require("sinon");
 import { IUserTest } from "../interfaces";
 import { Response } from "../models";
-import { BlogSchema, UserSchema } from "../schemas";
+import { TodoSchema, UserSchema } from "../schemas";
 import { Hasura } from "../server";
 import { Config } from "../shared";
 const User = model("User", UserSchema);
-const Blog = model("Blog", BlogSchema);
+const Todo = model("Todo", TodoSchema);
 
 const server: Hasura = new Hasura(process.env.API_PORT || 3001);
 server.startServer();
@@ -40,12 +40,12 @@ class UserRouteTest {
       name: "  sa ",
     };
 
-    this.noBodyorDescBlogData = {
+    this.noBodyorDescTodoData = {
       title: "dasdasd",
       dsc: "sadsadasd",
     };
 
-    this.emptyBodyorDesBlogData = {
+    this.emptyBodyorDesTodoData = {
       title: "  ",
       description: "    ",
     };
@@ -66,8 +66,8 @@ class UserRouteTest {
       passwordNo: "a",
     };
 
-    this.blogData = {
-      title: "test blog",
+    this.TodoData = {
+      title: "test Todo",
       description: "yep working and saving",
     };
   }
@@ -87,9 +87,9 @@ class UserRouteTest {
   private static testDataNoPasswordField: object;
   private static wrongUsername: object;
   private static token: string;
-  private static noBodyorDescBlogData: object;
-  private static emptyBodyorDesBlogData: object;
-  private static blogData: object;
+  private static noBodyorDescTodoData: object;
+  private static emptyBodyorDesTodoData: object;
+  private static TodoData: object;
 
   @test("Testing wrong URL - try hit the wrong API")
   public wrongURl(done) {
@@ -134,7 +134,7 @@ class UserRouteTest {
     }, 1000);
   }
 
-  @test("POST Register - Register User Successfuly")
+  @test("POST Register - try Register User Successfuly")
   public createUser(done) {
     setTimeout(() => {
       chai.request("http://localhost:" + server.port)
@@ -152,7 +152,7 @@ class UserRouteTest {
     }, 1000);
   }
 
-  @test("POST Register - Don't register as user already registered")
+  @test("POST Register - try Don't register as user already registered")
   public dontRegisterUser(done) {
     setTimeout(() => {
       chai.request("http://localhost:" + server.port)
@@ -252,7 +252,7 @@ class UserRouteTest {
     }, 1000);
   }
 
-  @test("POST Login - Posting wrong username")
+  @test("POST Login - try Posting wrong username")
   public NoUser(done) {
     setTimeout(() => {
       chai.request("http://localhost:" + server.port)
@@ -268,12 +268,12 @@ class UserRouteTest {
     }, 1000);
   }
 
-  @test("POST Blog - Posting without token")
+  @test("POST ToDo - try Posting without token")
   public NoToken(done) {
     setTimeout(() => {
       chai.request("http://localhost:" + server.port)
-        .post("/user/addBlog")
-        .send(UserRouteTest.noBodyorDescBlogData)
+        .post("/todo/addTodo")
+        .send(UserRouteTest.noBodyorDescTodoData)
         .end((err, res) => {
           chai.expect(res).to.have.status(200);
           chai.expect(res.body).to.deep.equal(new Response(403, "Auth token missing", {
@@ -284,12 +284,12 @@ class UserRouteTest {
     }, 1000);
   }
 
-  @test("POST Blog - Posting with wrong token")
+  @test("POST ToDo - try Posting with wrong token")
   public WrongToken(done) {
     setTimeout(() => {
       chai.request("http://localhost:" + server.port)
-        .post("/user/addBlog")
-        .send(UserRouteTest.noBodyorDescBlogData)
+        .post("/todo/addTodo")
+        .send(UserRouteTest.noBodyorDescTodoData)
         .set("x-access-token", "wrongtoken")
         .end((err, res) => {
           chai.expect(res).to.have.status(200);
@@ -301,12 +301,12 @@ class UserRouteTest {
     }, 1000);
   }
 
-  @test("POST Blog - try to post blog with no body or title")
+  @test("POST ToDo - try to post todo with no body or title")
   public noBodyOrTitle(done) {
     setTimeout(() => {
       chai.request("http://localhost:" + server.port)
-        .post("/user/addBlog")
-        .send(UserRouteTest.noBodyorDescBlogData)
+        .post("/todo/addTodo")
+        .send(UserRouteTest.noBodyorDescTodoData)
         .set("x-access-token", UserRouteTest.token)
         .end((err, res) => {
           chai.expect(res).to.have.status(200);
@@ -318,12 +318,12 @@ class UserRouteTest {
     }, 1000);
   }
 
-  @test("POST Blog - Empty title or description")
-  public emptyBlog(done) {
+  @test("POST ToDo - try Empty title or description")
+  public emptyTodo(done) {
     setTimeout(() => {
       chai.request("http://localhost:" + server.port)
-        .post("/user/addBlog")
-        .send(UserRouteTest.emptyBodyorDesBlogData)
+        .post("/todo/addTodo")
+        .send(UserRouteTest.emptyBodyorDesTodoData)
         .set("x-access-token", UserRouteTest.token)
         .end((err, res) => {
           chai.expect(res).to.have.status(200);
@@ -335,22 +335,22 @@ class UserRouteTest {
     }, 1000);
   }
 
-  @test("POST Blog - Save new Blog")
-  public saveBlog(done) {
+  @test("POST ToDo - try Save new Todo")
+  public saveTodo(done) {
     setTimeout(() => {
       chai.request("http://localhost:" + server.port)
-        .post("/user/addBlog")
-        .send(UserRouteTest.blogData)
+        .post("/todo/addTodo")
+        .send(UserRouteTest.TodoData)
         .set("x-access-token", UserRouteTest.token)
         .end((err, res) => {
           chai.expect(res).to.have.status(200);
-          chai.expect(res.body).to.deep.equal(new Response(200, "Successfully saved blog", {
+          chai.expect(res.body).to.deep.equal(new Response(200, "Successfully saved Todo", {
             success: true,
-            blog: res.body.data.blog,
+            todo: res.body.data.todo,
           }));
 
-          Blog.findOneAndDelete({ _id: res.body.data.blog._id }, () => {
-            // Deleting that blog
+          Todo.findOneAndDelete({ _id: res.body.data.todo._id }, () => {
+            // Deleting that Todo
             done();
           });
         });

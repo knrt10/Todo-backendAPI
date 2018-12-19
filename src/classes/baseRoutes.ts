@@ -11,10 +11,6 @@ import { Response } from "../models";
 export class BaseRoutes {
   protected router: express.Router = express.Router();
 
-  public constructor(protected winston: winston) {
-    this.initRoutes();
-  }
-
   /**
    * This returns epress router
    * @method
@@ -22,14 +18,6 @@ export class BaseRoutes {
    */
   public getRoutes(): express.Router {
     return this.router;
-  }
-
-  /**
-   * This method intitializes routes
-   * @method initRoutes
-   */
-  protected initRoutes() {
-    //
   }
 
   /**

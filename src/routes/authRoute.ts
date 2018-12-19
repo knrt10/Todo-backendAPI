@@ -1,6 +1,7 @@
 import express = require("express");
 import jwt = require("jsonwebtoken");
 import { model } from "mongoose";
+import winston = require("winston");
 import { BaseRoutes } from "../classes";
 import { Response } from "../models";
 import { UserSchema } from "../schemas";
@@ -10,6 +11,10 @@ const User = model("User", UserSchema);
 
 export class AuthRoutes extends BaseRoutes {
 
+  public constructor(protected winston: winston) {
+    super();
+    this.initRoutes();
+  }
   protected initRoutes() {
     this.router.route("/login").post((req, res, next) => this.loginUser(req, res, next));
   }

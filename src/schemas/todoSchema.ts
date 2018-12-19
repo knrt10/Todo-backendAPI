@@ -7,7 +7,7 @@ mongoose.Promise = global.Promise;
  * This is Schema for Blog
  * @constant {BlogSchema}
  */
-export const BlogSchema = new Schema({
+export const TodoSchema = new Schema({
   title: {
     type: String,
     required: true,

@@ -12,6 +12,7 @@ import mongoose = require("mongoose");
 // Importing Routes
 import {
   AuthRoutes,
+  ToDoRoute,
   UserRoutes,
 } from "./routes";
 
@@ -171,6 +172,10 @@ export class Hasura {
     // auth Routes, for logging in
     const authRoutes: AuthRoutes = new AuthRoutes(this.winston);
     this.app.use("/auth", authRoutes.getRoutes());
+
+    // Todo Routes, for managing Todo
+    const toDoRoutes: ToDoRoute = new ToDoRoute(this.winston);
+    this.app.use("/todo", toDoRoutes.getRoutes());
 
     // user Routes, registering and rest 2 routes
     const userRoutes: UserRoutes = new UserRoutes(this.winston);

@@ -1,2 +1,2 @@
 export * from "./userSchema";
-export * from "./blogSchema";
+export * from "./todoSchema";
