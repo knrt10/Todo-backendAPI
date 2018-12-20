@@ -3,10 +3,12 @@ import jwt = require("jsonwebtoken");
 import { model } from "mongoose";
 import winston = require("winston");
 import { BaseRoutes } from "../classes";
-import { IUser } from "../interfaces";
+import { Authenticated, IUser } from "../interfaces";
 import { Response } from "../models";
 import { UserSchema } from "../schemas";
 import { Config } from "../shared";
+
+import { isAuthenticated } from "../middleware";
 
 const User = model("User", UserSchema);
 
@@ -19,6 +21,7 @@ export class UserRoutes extends BaseRoutes {
 
   protected initRoutes() {
     this.router.route("/register").post((req, res) => this.registerUser(req, res));
+    this.router.route("/profile").get(isAuthenticated, (req: Authenticated, res) => this.getProfileUser(req, res));
   }
 
   /**
@@ -70,6 +73,24 @@ export class UserRoutes extends BaseRoutes {
           }
         });
       }
+    });
+
+    this.completeRequest(promise, res);
+  }
+
+  /**
+   * This is a route for getting user profile information
+   * @param req
+   * @param res
+   */
+  private getProfileUser(req: Authenticated, res: express.Response) {
+    const promise: Promise<Response> = new Promise((resolve) => {
+      User.findOne({_id: req.user._id}, (err, user) => {
+        resolve(new Response(200, "User information", {
+          success: true,
+          user,
+        }));
+      });
     });
 
     this.completeRequest(promise, res);

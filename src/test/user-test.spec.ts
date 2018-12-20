@@ -21,7 +21,7 @@ chai.use(chaiHttp);
 @suite("User Test Class")
 class UserRouteTest {
   static user: any;
-
+  static toDoSavedData: any;
   static before() {
     this.testData = {
       username: "knrt1",
@@ -70,6 +70,8 @@ class UserRouteTest {
       title: "test Todo",
       description: "yep working and saving",
     };
+
+    this.wrongTodoId = "anything";
   }
 
   static after() {
@@ -90,6 +92,7 @@ class UserRouteTest {
   private static noBodyorDescTodoData: object;
   private static emptyBodyorDesTodoData: object;
   private static TodoData: object;
+  private static wrongTodoId: string;
 
   @test("Testing wrong URL - try hit the wrong API")
   public wrongURl(done) {
@@ -268,6 +271,23 @@ class UserRouteTest {
     }, 1000);
   }
 
+  @test("GET Profile - try getting user profile")
+  public ProfileUser(done) {
+    setTimeout(() => {
+      chai.request("http://localhost:" + server.port)
+        .get("/user/profile")
+        .set("x-access-token", UserRouteTest.token)
+        .end((err, res) => {
+          chai.expect(res).to.have.status(200);
+          chai.expect(res.body).to.deep.equal(new Response(200, "User information", {
+            success: true,
+            user: res.body.data.user,
+          }));
+          done();
+        });
+    }, 1000);
+  }
+
   @test("POST ToDo - try Posting without token")
   public NoToken(done) {
     setTimeout(() => {
@@ -343,16 +363,63 @@ class UserRouteTest {
         .send(UserRouteTest.TodoData)
         .set("x-access-token", UserRouteTest.token)
         .end((err, res) => {
+          UserRouteTest.toDoSavedData = res.body.data.todo;
           chai.expect(res).to.have.status(200);
           chai.expect(res.body).to.deep.equal(new Response(200, "Successfully saved Todo", {
             success: true,
             todo: res.body.data.todo,
           }));
+          done();
+        });
+    }, 1000);
+  }
 
-          Todo.findOneAndDelete({ _id: res.body.data.todo._id }, () => {
-            // Deleting that Todo
-            done();
-          });
+  @test("POST ToDo - try don't delete todo")
+  public dontDeleteTodoBy(done) {
+    setTimeout(() => {
+      chai.request("http://localhost:" + server.port)
+        .post("/todo/deleteTodo/" + UserRouteTest.wrongTodoId)
+        .send(UserRouteTest.wrongTodoId)
+        .set("x-access-token", UserRouteTest.token)
+        .end((err, res) => {
+          chai.expect(res).to.have.status(200);
+          chai.expect(res.body).to.deep.equal(new Response(200, "Not able to get todo", {
+            success: false,
+          }));
+          done();
+        });
+    }, 1000);
+  }
+
+  @test("POST ToDo - try delete todo")
+  public deleteTodo(done) {
+    setTimeout(() => {
+      chai.request("http://localhost:" + server.port)
+        .post("/todo/deleteTodo/" + UserRouteTest.toDoSavedData._id)
+        .set("x-access-token", UserRouteTest.token)
+        .end((err, res) => {
+          chai.expect(res).to.have.status(200);
+          chai.expect(res.body).to.deep.equal(new Response(200, "Successfully deleted todo", {
+            success: true,
+          }));
+          done();
+        });
+    }, 1000);
+  }
+
+  @test("Get ToDo - try get all todos for a User")
+  public getAllTodosForAUser(done) {
+    setTimeout(() => {
+      chai.request("http://localhost:" + server.port)
+        .get("/todo/all/")
+        .set("x-access-token", UserRouteTest.token)
+        .end((err, res) => {
+          chai.expect(res).to.have.status(200);
+          chai.expect(res.body).to.deep.equal(new Response(200, "All todos", {
+            success: true,
+            todos: res.body.data.todos,
+          }));
+          done();
         });
     }, 1000);
   }

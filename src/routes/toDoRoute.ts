@@ -19,11 +19,12 @@ export class ToDoRoute extends BaseRoutes {
 
   protected initRoutes() {
     this.router.route("/addTodo").post(isAuthenticated, (req: Authenticated, res) => this.addTodo(req, res));
-    this.router.route("deleteTodo/:id").get(isAuthenticated, (req: Authenticated, res) => this.deleteTodo(req, res));
+    this.router.route("/deleteTodo/:id").post(isAuthenticated, (req: Authenticated, res) => this.deleteTodo(req, res));
+    this.router.route("/all").get(isAuthenticated, (req: Authenticated, res) => this.allUserTodo(req, res));
   }
 
   /**
-   * This is a route for Adding Blog
+   * This is a route for Adding todo
    * @param req
    * @param res
    */
@@ -68,22 +69,44 @@ export class ToDoRoute extends BaseRoutes {
   }
 
   /**
-   * This gets particular blog
+   * This gets particular todo
    * @param req
    * @param res
    */
   private deleteTodo(req: Authenticated, res: express.Response) {
     const promise: Promise<Response> = new Promise((resolve, reject) => {
       const todoId = req.params.id;
-      Todo.findById({ _id: todoId}, (err, blog) => {
+      Todo.findById({ _id: todoId}, (err) => {
         if (err) {
-          reject(new Response(200, "Not able to get blog", {
+          reject(new Response(200, "Not able to get todo", {
             success: false,
           }));
         }
-        this.winston.info(blog);
+        Todo.findOneAndDelete({_id : todoId}, () => {
+          resolve(new Response(200, "Successfully deleted todo", {
+            success: true,
+          }));
+        });
       });
     });
+    this.completeRequest(promise, res);
+  }
+
+  /**
+   * This is a route for getting all todos for a user
+   * @param req
+   * @param res
+   */
+  private allUserTodo(req: Authenticated, res: express.Response) {
+    const promise: Promise<Response> = new Promise((resolve) => {
+      Todo.find({ postedBy: req.user._id }, (err, todos) => {
+        resolve(new Response(200, "All todos", {
+          success: true,
+          todos,
+        }));
+      });
+    });
+
     this.completeRequest(promise, res);
   }
 }
