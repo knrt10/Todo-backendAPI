@@ -9,11 +9,15 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-       - mongodb
+       - postgres
 
-  mongodb:
-     image: mongo
+  postgres:
+     image: postgres
+     environment:
+      POSTGRES_USER: "knrt10"
+      POSTGRES_PASSWORD: "knrt10"
+      POSTGRES_DB: "hasura"
      ports:
-       - "27017:27017"
+       - "5432:5432"
      volumes:
        - ./data:/data/db

@@ -5,7 +5,6 @@ import { Authenticated } from "../interfaces";
 import {Response} from "../models";
 import {UserSchema} from "../schemas";
 import {Config} from "../shared";
-const User = model("User", UserSchema);
 
 /**
  * This is middleware to validate jwt token.
@@ -29,10 +28,7 @@ export const isAuthenticated = (req: Authenticated, res: express.Response, next:
           success: false,
         }));
       } else {
-        User.findById(decoded.id).select("password").then((user) => {
-          req.user = user;
-          next();
-        });
+        //
       }
     });
   }

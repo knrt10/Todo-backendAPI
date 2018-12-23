@@ -106,32 +106,32 @@ class UserRouteTest {
     }, 1000);
   }
 
-  @test("Testing Local Connection - try connection for Local mongoDb")
+  @test("Testing Local Connection - try connection for Local postgres")
   public localDb(done) {
     setTimeout(() => {
       Config.dbSettings.localDatabase = true;
       const mock = sinon.mock(new Hasura(process.env.API_PORT || 3001), "constructor");
-      chai.expect(mock.object.infoString).to.deep.equal("mongodb://" + Config.dbSettings.connectionString + "/" + Config.dbSettings.database);
+      chai.expect(mock.object.infoString).to.deep.equal("postgres://" + Config.dbSettings.connectionString + "/" + Config.dbSettings.database);
       done();
     }, 1000);
   }
 
-  @test("Testing Docker Connection - try connection for docker mongoDb")
+  @test("Testing Docker Connection - try connection for docker postgres")
   public dockerDb(done) {
     setTimeout(() => {
       Config.dbSettings.localDatabase = false;
       const mock = sinon.mock(new Hasura(process.env.API_PORT || 3001), "constructor");
-      chai.expect(mock.object.infoString).to.deep.equal("mongodb://" + Config.dbSettings.dockerconnectionString + "/" + Config.dbSettings.database);
+      chai.expect(mock.object.infoString).to.deep.equal("postgres://" + Config.dbSettings.dockerconnectionString + "/" + Config.dbSettings.database);
       done();
     }, 1000);
   }
 
-  @test("Testing Online Connection - try connection for online mongoDb")
+  @test("Testing Online Connection - try connection for online postgres")
   public OnlineDb(done) {
     setTimeout(() => {
       Config.dbSettings.authEnabled = true;
       const mock = sinon.mock(new Hasura(process.env.API_PORT || 3001), "constructor");
-      chai.expect(mock.object.infoString).to.deep.equal("mongodb://" + Config.dbSettings.username + ":" + Config.dbSettings.password + "@"
+      chai.expect(mock.object.infoString).to.deep.equal("postgres://" + Config.dbSettings.username + ":" + Config.dbSettings.password + "@"
         + Config.dbSettings.connectionString + "/" + Config.dbSettings.database);
       done();
     }, 1000);

@@ -1,37 +1,32 @@
 import bcrypt = require("bcrypt-nodejs");
-import {Schema} from "mongoose";
-import mongoose = require("mongoose");
+import Sequelize from "sequelize";
+import { databaseString } from "../functions/infoString";
 
-mongoose.Promise = global.Promise;
+const sequelize = new Sequelize(databaseString(), { operatorsAliases: false });
 
 /**
  * This is Schema for User
  * @constant {UserSchema}
  */
-export const UserSchema = new Schema({
+export const UserSchema = sequelize.define("user", {
   username: {
-    type: String,
-    trim: true,
-    unique: true,
-    select: true,
+    type: Sequelize.STRING,
+    allowNull: false,
   },
-  name:  {
-    type: String,
-    select: true,
-    required: true,
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
   },
   password: {
-    type: String,
-    select: false,
+    type: Sequelize.STRING,
+    allowNull: false,
   },
-}, {
-  timestamps: {},
 });
 
-UserSchema.methods.generateHash = function(password): boolean {
+export function generateHash(password): boolean {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
+}
 
-UserSchema.methods.validPassword = function(password): boolean {
+export function validPassword(password): boolean {
   return bcrypt.compareSync(password, this.password);
-};
+}

@@ -6,19 +6,16 @@ import bluebird = require("bluebird");
 import bodyParser = require("body-parser");
 import cors = require("cors");
 import express = require("express");
+const graphqlHTTP = require("express-graphql");
 import fs = require("fs");
-import mongoose = require("mongoose");
-
-// Importing Routes
-import {
-  AuthRoutes,
-  ToDoRoute,
-  UserRoutes,
-} from "./routes";
+import { buildSchema } from "graphql";
+import jwt = require("jsonwebtoken");
+import Sequelize from "sequelize";
+import { databaseString } from "./functions/infoString";
+import { generateHash, UserSchema } from "./schemas";
 
 import { Config } from "./shared";
 global.Promise = bluebird;
-mongoose.Promise = global.Promise;
 
 /**
  * @exports Hasura
@@ -38,14 +35,7 @@ export class Hasura {
   private winston: any = require("winston"); // for logging
   private app: any; // express server
   constructor(private portGiven) {
-    if (Config.dbSettings.authEnabled) {
-      this.infoString = "mongodb://" + Config.dbSettings.username + ":" + Config.dbSettings.password + "@"
-        + Config.dbSettings.connectionString + "/" + Config.dbSettings.database;
-    } else if (Config.dbSettings.localDatabase) {
-      this.infoString = "mongodb://" + Config.dbSettings.connectionString + "/" + Config.dbSettings.database;
-    } else {
-      this.infoString = "mongodb://" + Config.dbSettings.dockerconnectionString + "/" + Config.dbSettings.database;
-    }
+    this.infoString = databaseString();
     this.port = portGiven;
   }
 
@@ -169,17 +159,70 @@ export class Hasura {
    */
   private initAppRoutes() {
 
-    // auth Routes, for logging in
-    const authRoutes: AuthRoutes = new AuthRoutes(this.winston);
-    this.app.use("/auth", authRoutes.getRoutes());
+    const schema = buildSchema(`
+      type Mutation {
+        createUser(username: String!, name: String!, password: String!) : User
+      }
 
-    // Todo Routes, for managing Todo
-    const toDoRoutes: ToDoRoute = new ToDoRoute(this.winston);
-    this.app.use("/todo", toDoRoutes.getRoutes());
+      type User {
+        id: ID!
+        username: String!,
+        name: String!,
+        password: String!,
+      }
 
-    // user Routes, registering and rest 2 routes
-    const userRoutes: UserRoutes = new UserRoutes(this.winston);
-    this.app.use("/user", userRoutes.getRoutes());
+      type Query {
+        hello: String
+        test: String
+      }
+    `);
+
+    const root = {
+      hello: () => {
+        return "Hello world!";
+      },
+
+      test: () => {
+        return "I am world";
+      },
+
+      createUser: (args) => {
+        UserSchema.sync({ force: true }).then(() => {
+          UserSchema.findOne({ username: args.username }).then((user: any) => {
+            if (user !== null) {
+              console.log("user already");
+              return "User already there";
+            } else {
+              // generating new hashed password
+              const password = generateHash(args.password);
+              const secret: any = Config.secretKeys.jwtSecret;
+              const token = jwt.sign({ id: args.username }, secret, {
+                expiresIn: "23h",
+              });
+              // Table created
+              UserSchema.create({
+                username: args.username,
+                name: args.name,
+                password,
+              }).then((val) => {
+                return {
+                  id: val.id,
+                  username: args.username,
+                  name: args.name,
+                  password,
+                };
+              });
+            }
+          });
+        });
+      },
+    };
+
+    this.app.use("/graphql", graphqlHTTP({
+      schema,
+      rootValue: root,
+      graphiql: true,
+    }));
   }
 
   /**
@@ -189,11 +232,12 @@ export class Hasura {
    */
   private initServices(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
-      // connect to mongodb
-      mongoose.connect(this.infoString, { useNewUrlParser: true }).then(() => {
-        this.winston.info("Mongo Connected!");
-        resolve(true);
-      });
+      // connect to postgres
+      new Sequelize(this.infoString, { operatorsAliases: false }).authenticate()
+        .then(() => {
+          this.winston.info("Potgress connected successfully.");
+          resolve(true);
+        });
     });
   }
 }
