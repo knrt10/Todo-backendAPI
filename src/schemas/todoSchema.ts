@@ -8,6 +8,12 @@ mongoose.Promise = global.Promise;
  * @constant {BlogSchema}
  */
 export const TodoSchema = new Schema({
+  id: {
+    type: String,
+  },
+  postedByid: {
+    type: String,
+  },
   title: {
     type: String,
     required: true,

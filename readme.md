@@ -89,3 +89,90 @@ and headers
 }
 ```
 
+## Create TODO
+
+```ts
+mutation addtodo($input: todoInput) {
+  addTodo(input: $input) {
+    code
+    message
+    data {
+     	todo {
+        id
+        postedByid
+        description
+        updatedAt
+        createdAt
+        name
+      }
+    }
+  }
+}
+
+and input
+
+{
+  "input": {
+    "title": "knrt10",
+    "description": "test"
+  }
+}
+
+and also headers
+
+{
+  "x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMjBkNzRiMGJjNTc4MTRmOGE4YjQ5ZSIsImlhdCI6MTU0NTY1NzI5OSwiZXhwIjoxNTQ1NzQwMDk5fQ.wG4i5gvxTG6Ts-6jfQp1ZdDtF6RysMh-WtXQYACBl74"
+}
+```
+
+## Get all todos
+
+```ts
+
+query alltodos {
+  todoUsers{
+    code
+    message
+    data {
+      success
+      todos {
+        title
+        description
+      }
+    }
+  }
+}
+
+and also headers
+
+{
+  "x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMjBkNzRiMGJjNTc4MTRmOGE4YjQ5ZSIsImlhdCI6MTU0NTY1NzI5OSwiZXhwIjoxNTQ1NzQwMDk5fQ.wG4i5gvxTG6Ts-6jfQp1ZdDtF6RysMh-WtXQYACBl74"
+}
+``` 
+
+## Deleting Todo
+
+```ts
+
+mutation deleteTodo($id: String) {
+  deleteTodo(id: $id) {
+    code
+    message
+    data {
+      success
+    }
+  }
+}
+
+and input
+
+{
+  "id": "5c20ecda2e62db1ae4d9ff42"
+}
+
+and also headers
+
+{
+  "x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMjBkNzRiMGJjNTc4MTRmOGE4YjQ5ZSIsImlhdCI6MTU0NTY1NzI5OSwiZXhwIjoxNTQ1NzQwMDk5fQ.wG4i5gvxTG6Ts-6jfQp1ZdDtF6RysMh-WtXQYACBl74"
+}
+```

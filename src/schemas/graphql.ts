@@ -1,6 +1,7 @@
-import { GraphQLBoolean, GraphQLID, GraphQLInputObjectType, GraphQLInt, GraphQLNonNull,  GraphQLObjectType, GraphQLSchema, GraphQLString } from "graphql";
+import { GraphQLNonNull, GraphQLObjectType, GraphQLSchema, GraphQLString } from "graphql";
 import { isAuthenticated } from "../middleware";
-import { login, register } from "../routes";
+import { addTodo, deleteTodo, getAlltodosForUser, login, register } from "../routes";
+import { todographqlSchema } from "./todographqlSchema";
 import { userLoginSchema } from "./userLoginSchema";
 import { userRegisterSchema } from "./userRegisterSchema";
 
@@ -27,6 +28,19 @@ const queryType = new GraphQLObjectType({
         return authenticated;
       },
     },
+    todoUsers: {
+      type: new GraphQLNonNull(todographqlSchema.userTodoResponse),
+      // `args` describes the arguments that the `user` query accepts
+      async resolve(parent, args, context, info) {
+        const authenticated = await isAuthenticated(context);
+        if (authenticated.code !== 200) {
+          return authenticated;
+        } else {
+          const val = await getAlltodosForUser(authenticated.data.user);
+          return val;
+        }
+      },
+    },
   },
 });
 
@@ -43,6 +57,38 @@ const mutationType = new GraphQLObjectType({
       async resolve(_, args) {
         const val = await register(args);
         return val;
+      },
+    },
+    addTodo: {
+      type: new GraphQLNonNull(todographqlSchema.responseType),
+      // `args` describes the arguments that the `user` query accepts
+      args: {
+        input: { type: todographqlSchema.toDoInput },
+      },
+      async resolve(parent, args, context, info) {
+        const authenticated = await isAuthenticated(context);
+        if (authenticated.code !== 200) {
+          return authenticated;
+        } else {
+          const val = await addTodo(args, authenticated.data.user);
+          return val;
+        }
+      },
+    },
+    deleteTodo: {
+      type: new GraphQLNonNull(todographqlSchema.userTodoDeleteResponse),
+      // `args` describes the arguments that the `user` query accepts
+      args: {
+        id: { type: GraphQLString },
+      },
+      async resolve(parent, args, context, info) {
+        const authenticated = await isAuthenticated(context);
+        if (authenticated.code !== 200) {
+          return authenticated;
+        } else {
+          const val = await deleteTodo(args);
+          return val;
+        }
       },
     },
   },
