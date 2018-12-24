@@ -1,10 +1,10 @@
 export class Response {
   public code: number;
-  public messge: string;
+  public message: string;
   public data: any;
   constructor(code: number, message: string, data: any) {
     this.code = code;
-    this.messge = message;
+    this.message = message;
     this.data = data;
   }
 }

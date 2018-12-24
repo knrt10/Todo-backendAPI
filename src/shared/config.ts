@@ -7,13 +7,13 @@ export const Config = {
     host: process.env.API_HOST || "localhost",
   },
   dbSettings: {
-    authEnabled: process.env.POSTGRESS_AUTH || false,
+    authEnabled: process.env.MONGO_AUTH || false,
     localDatabase: true,
-    dockerconnectionString: process.env.POSTGRESS_DB_HOST_DOCKER || "postgres",
-    connectionString: process.env.POSTGRESS_DB_HOST || "localhost",
+    dockerconnectionString: process.env.MONGO_DB_HOST_DOCKER || "mongodb:27017",
+    connectionString: process.env.MONGO_DB_HOST || "localhost:27017",
     database: process.env.DATABASE || "hasura",
-    password: process.env.POSTGRESS_AUTH_PASSWORD || "knrt10",
-    username: process.env.POSTGRESS_AUTH_USERNAME || "knrt10",
+    password: process.env.MONGO_AUTH_PASSWORD,
+    username: process.env.MONGO_AUTH_USERNAME,
   },
   serviceSettings: {
     logsDir: "logs/",

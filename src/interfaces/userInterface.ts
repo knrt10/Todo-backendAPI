@@ -1,14 +1,4 @@
-import express = require("express");
 import {Document} from "mongoose";
-
-/**
- * This is interface for Authenticated user
- * @interface
- * @extends {express.Request}
- */
-export interface Authenticated extends express.Request {
-  user;
-}
 
 /**
  * This is interface for user
