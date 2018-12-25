@@ -8,7 +8,7 @@ export const Config = {
   },
   dbSettings: {
     authEnabled: process.env.MONGO_AUTH || false,
-    localDatabase: true,
+    localDatabase: false,
     dockerconnectionString: process.env.MONGO_DB_HOST_DOCKER || "mongodb:27017",
     connectionString: process.env.MONGO_DB_HOST || "localhost:27017",
     database: process.env.DATABASE || "todoapp",
