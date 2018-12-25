@@ -1,7 +1,7 @@
 "use strict";
 
-import { Hasura } from "./server";
+import { TodoApp } from "./server";
 
-const server: Hasura = new Hasura(process.env.API_PORT || 3000);
+const server: TodoApp = new TodoApp(process.env.API_PORT || 3000);
 // starting the server
 server.startServer();

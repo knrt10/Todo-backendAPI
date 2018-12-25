@@ -11,7 +11,8 @@
     "dockerStop": "docker-compose down",
     "lint": "tslint -c tslint.json 'src/**/*.ts' --fix",
     "start": "gulp && cd dist/ && node --inspect=8990 --no-deprecation app.js",
-    "test": "mocha --no-deprecation --timeout 10000 --require ts-node/register **/*.spec.ts"
+    "test": "mocha --no-deprecation --timeout 10000 --require ts-node/register **/*.spec.ts",
+    "posttest": "nyc --reporter=json mocha --no-deprecation --timeout 10000 dist/test/*.spec.js -x dist/test/*.spec.js"
   },
   "keywords": [
     "Hasura backend"

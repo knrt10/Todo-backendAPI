@@ -2,6 +2,6 @@
 
 cd ..
 
-docker build -t knrt10/hasura -f Dockerfile .
+docker build -t knrt10/todoapi -f Dockerfile .
 
 docker-compose up -d

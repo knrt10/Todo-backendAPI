@@ -15,7 +15,7 @@ import { Config } from "./shared";
 global.Promise = bluebird;
 
 /**
- * @exports Hasura
+ * @exports TodoApp
  * @class
  * @method startServer
  * @method initEnv
@@ -25,7 +25,7 @@ global.Promise = bluebird;
  * @method initAppRoutes
  * @method initServices
  */
-export class Hasura {
+export class TodoApp {
   public infoString: string;
   public port: any;
   private pkg = require("../package.json"); // information about package version

@@ -6,9 +6,14 @@ services:
   - mongodb
 
 script:
+  - npm install codecov -g
   - npm i
   - npm run build
-  - npm run coverage
+  - npm run test
+  - codecov -f coverage/*.json
+
+after_success:
+  - codecov
 
 notifications:
 disabled: true

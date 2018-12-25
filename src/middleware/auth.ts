@@ -23,23 +23,21 @@ export async function isAuthenticated(context) {
       }));
     } else {
       // verify jwt token
-      if (token) {
-        jwt.verify(token, secret, (err, decoded) => {
-          if (err) {
-            reject(new Response(500, "Unable to authenticate user", {
-              success: false,
+      jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+          reject(new Response(500, "Unable to authenticate user", {
+            success: false,
+          }));
+        } else {
+          User.findById(decoded.id).select("password").then((user) => {
+            resolve(new Response(200, "Successfull Response", {
+              success: true,
+              user,
+              token,
             }));
-          } else {
-            User.findById(decoded.id).select("password").then((user) => {
-              resolve(new Response(200, "Successfull Response", {
-                success: true,
-                user,
-                token,
-              }));
-            });
-          }
-        });
-      }
+          });
+        }
+      });
     }
   });
   const val = await completeRequest(promise);

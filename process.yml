@@ -1,4 +1,4 @@
 apps:
   - script    : 'app.js'
-    name      : 'Hasura Backend To-do'
+    name      : 'Backend To-do API'
     node_args : '--inspect=0.0.0.0:5858'
