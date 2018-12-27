@@ -1,4 +1,6 @@
-# Todo API Backend
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/24803604/50481874-edac8280-0a09-11e9-837b-3e64409c21fb.png" />
+</p>
 
 [![Build Status](https://travis-ci.org/knrt10/Hasura-Todo-backend.svg?branch=master)](https://travis-ci.org/knrt10/Hasura-Todo-backend)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/97bd422023ea446bab65dbb78fd80a3c)](https://www.codacy.com/app/knrt10/Hasura-Todo-backend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=knrt10/Hasura-Todo-backend&amp;utm_campaign=Badge_Grade)
@@ -23,6 +25,7 @@
     - [Create TODO](#create-todo)
     - [Get all todos](#get-all-todos)
     - [Deleting a Todo](#deleting-a-todo)
+8. [Support](#support)    
 
 ### About the Project
 
@@ -123,7 +126,7 @@ This is simple API of application. Go to `http://localhost:3000/graphql` or open
 #### Registering User
 
 ```ts
-mutation register($input: UserInputRegister) {
+mutation registerUser($input: UserInputRegister) {
   registerUser(input: $input) {
     code
     message
@@ -156,7 +159,7 @@ and input
 #### Login User
 
 ```ts
-query Login($input: UserInputLogin) {
+query loginUser($input: UserInputLogin) {
   loginUser(input: $input) {
     code,
     message,
@@ -210,7 +213,7 @@ and headers
 #### Create TODO
 
 ```ts
-mutation addtodo($input: todoInput) {
+mutation addTodo($input: todoInput) {
   addTodo(input: $input) {
     code
     message
@@ -294,3 +297,11 @@ and also headers
   "x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMjBkNzRiMGJjNTc4MTRmOGE4YjQ5ZSIsImlhdCI6MTU0NTY1NzI5OSwiZXhwIjoxNTQ1NzQwMDk5fQ.wG4i5gvxTG6Ts-6jfQp1ZdDtF6RysMh-WtXQYACBl74"
 }
 ```
+
+## Support
+
+I wrote this repo by using my free time. A little motivation and support helps me a lot. If you like this nifty hack you can support me by doing any (or all :wink: ) of the following:
+- :star: Star it on [Github](https://github.com/knrt10/Todo-backendAPI) and make it trend so that other people can know about our project.
+- :clap: Clap for the series of article on [Medium](https://medium.com/@knrt/3423a6004b96)
+- Tweet about it
+- Share this on Facebook
