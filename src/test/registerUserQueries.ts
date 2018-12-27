@@ -31,6 +31,32 @@ const registerSuccessfullyQuery = {
   },
 };
 
+const registerSuccessfullyQuerySecondUser = {
+  query: query,
+  operationName: "registerUser"
+  ,
+  variables: {
+    input: {
+      username: "knrt191",
+      name: "Second",
+      password: "test",
+    },
+  },
+};
+
+const registerSuccessfullyQueryThirdUser = {
+  query: query,
+  operationName: "registerUser"
+  ,
+  variables: {
+    input: {
+      username: "knrt1912",
+      name: "Third",
+      password: "test",
+    },
+  },
+};
+
 const registerFailNoUsernameQuery = {
   query: query ,
   operationName: "registerUser"
@@ -59,6 +85,8 @@ const registerFailSmallUsernameQuery = {
 
 export const registerqueries = {
   registerSuccessfullyQuery,
+  registerSuccessfullyQuerySecondUser,
+  registerSuccessfullyQueryThirdUser,
   registerFailNoUsernameQuery,
   registerFailSmallUsernameQuery,
 };

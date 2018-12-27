@@ -19,6 +19,25 @@ const query = `mutation addTodo($input: todoInput) {
   }
 }`;
 
+const updateQuery = `mutation updateTodo($input: todoInputUpdate) {
+  updateTodo(input: $input) {
+    code
+    message
+    data {
+      success
+     	todo {
+        id
+        postedByid
+        description
+        updatedAt
+        createdAt
+        name
+        title
+      }
+    }
+  }
+}`;
+
 const deleteQuery = `mutation deleteTodo($id: String) {
   deleteTodo(id: $id) {
     code
@@ -79,6 +98,45 @@ const toDoFailNotitleQuery = {
   },
 };
 
+const toDoUpdateQuery = {
+  query: updateQuery,
+  operationName: "updateTodo"
+  ,
+  variables: {
+    input: {
+      id: "anything",
+      title: "Test title",
+      description: "test description",
+    },
+  },
+};
+
+const toDoFailNoIdUpdateQuery = {
+  query: updateQuery,
+  operationName: "updateTodo"
+  ,
+  variables: {
+    input: {
+      id: "",
+      title: "fsdfs",
+      description: "fsdsdf",
+    },
+  },
+};
+
+const toDoFailNotitleOrDescUpdateQuery = {
+  query: updateQuery,
+  operationName: "updateTodo"
+  ,
+  variables: {
+    input: {
+      id: "anything",
+      title: "  ",
+      description: "   ",
+    },
+  },
+};
+
 const toDoFailDeleteQuery = {
   query: deleteQuery,
   operationName: "deleteTodo"
@@ -98,7 +156,11 @@ export const todoQueries = {
   toDoSuccessfullyQuery,
   toDoFailNotitleOrDescyQuery,
   toDoFailNotitleQuery,
+  toDoUpdateQuery,
+  toDoFailNoIdUpdateQuery,
+  toDoFailNotitleOrDescUpdateQuery,
   toDoFailDeleteQuery,
+  updateQuery,
   deleteQuery,
   TodoAllQuery,
 };

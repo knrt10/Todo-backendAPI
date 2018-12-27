@@ -250,7 +250,7 @@ and also headers
 
 ```ts
 
-query alltodos {
+query todoUsers {
   todoUsers{
     code
     message
@@ -270,6 +270,42 @@ and also headers
   "x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMjBkNzRiMGJjNTc4MTRmOGE4YjQ5ZSIsImlhdCI6MTU0NTY1NzI5OSwiZXhwIjoxNTQ1NzQwMDk5fQ.wG4i5gvxTG6Ts-6jfQp1ZdDtF6RysMh-WtXQYACBl74"
 }
 ``` 
+
+#### Updating a Todo
+
+```ts
+mutation updateTodo($input: todoInputUpdate) {
+  updateTodo(input: $input) {
+    code
+    message
+    data {
+     	todo {
+        id
+        postedByid
+        description
+        updatedAt
+        createdAt
+        name
+        title
+      }
+    }
+  }
+}
+
+and input 
+{
+  "input": {
+    "id": "5c2503576c89915ab8ac3572",
+    "title": "Woooa this is working?",
+    "description": "Yep."
+  }
+}
+
+and also header
+{
+  "x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMjUwMzIwNmM4OTkxNWFiOGFjMzU3MSIsImlhdCI6MTU0NTkyOTUwNCwiZXhwIjoxNTQ2MDEyMzA0fQ.hn4csdGR5w-2yXWVUEmW4wh8U0s5SfWXfClmP0jVgOY"
+}
+```
 
 #### Deleting a Todo
 

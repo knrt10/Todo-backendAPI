@@ -11,7 +11,7 @@ export const Config = {
     localDatabase: true,
     dockerconnectionString: process.env.MONGO_DB_HOST_DOCKER || "mongodb:27017",
     connectionString: process.env.MONGO_DB_HOST || "localhost:27017",
-    database: process.env.DATABASE || "hasura",
+    database: process.env.DATABASE || "todoapp",
     password: process.env.MONGO_AUTH_PASSWORD,
     username: process.env.MONGO_AUTH_USERNAME,
   },

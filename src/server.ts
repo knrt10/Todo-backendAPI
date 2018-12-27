@@ -3,7 +3,6 @@
   Import modules
 */
 import bluebird = require("bluebird");
-import bodyParser = require("body-parser");
 import cors = require("cors");
 import express = require("express");
 const graphqlHTTP = require("express-graphql");
@@ -138,8 +137,6 @@ export class TodoApp {
     // create express
     this.app = express();
     this.initCORS();
-    // make express use the bodyParser for json middleware
-    this.app.use(bodyParser.json({}));
 
     // add in any routes you might want
     this.initAppRoutes();

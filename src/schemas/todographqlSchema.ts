@@ -42,6 +42,15 @@ const toDoInput = new GraphQLInputObjectType({
   },
 });
 
+const toDoInputUpdate = new GraphQLInputObjectType({
+  name: "todoInputUpdate",
+  fields: {
+    id: { type: GraphQLString },
+    title: { type: GraphQLString },
+    description: { type: GraphQLString },
+  },
+});
+
 // For getting todo
 
 // Data reponse of user
@@ -85,6 +94,7 @@ export const todographqlSchema = {
   DataResponse,
   responseType,
   toDoInput,
+  toDoInputUpdate,
   todoUsersDataResponse,
   userTodoResponse,
   userTodoDeleteResponse,
