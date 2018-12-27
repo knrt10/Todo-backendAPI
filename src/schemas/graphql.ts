@@ -1,6 +1,6 @@
 import { GraphQLNonNull, GraphQLObjectType, GraphQLSchema, GraphQLString } from "graphql";
 import { isAuthenticated } from "../middleware";
-import { addTodo, deleteTodo, getAlltodosForUser, login, register } from "../routes";
+import { addTodo, deleteTodo, getAlltodosForUser, login, register, update } from "../routes";
 import { todographqlSchema } from "./todographqlSchema";
 import { userLoginSchema } from "./userLoginSchema";
 import { userRegisterSchema } from "./userRegisterSchema";
@@ -75,6 +75,22 @@ const mutationType = new GraphQLObjectType({
         }
       },
     },
+    updateTodo: {
+      type: new GraphQLNonNull(todographqlSchema.responseType),
+      // `args` describes the arguments that the `user` query accepts
+      args: {
+        input: { type: todographqlSchema.toDoInputUpdate },
+      },
+      async resolve(parent, args, context, info) {
+        const authenticated = await isAuthenticated(context);
+        if (authenticated.code !== 200) {
+          return authenticated;
+        } else {
+          const val = await update(args, authenticated.data.user);
+          return val;
+        }
+      },
+    },
     deleteTodo: {
       type: new GraphQLNonNull(todographqlSchema.userTodoDeleteResponse),
       // `args` describes the arguments that the `user` query accepts
@@ -86,7 +102,7 @@ const mutationType = new GraphQLObjectType({
         if (authenticated.code !== 200) {
           return authenticated;
         } else {
-          const val = await deleteTodo(args);
+          const val = await deleteTodo(args, authenticated.data.user);
           return val;
         }
       },

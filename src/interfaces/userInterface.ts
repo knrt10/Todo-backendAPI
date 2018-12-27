@@ -15,16 +15,3 @@ export interface IUser extends Document {
   // tslint:disable-next-line:semicolon
   name: string,
 }
-
-/**
- * This is interface of user for testing
- * @interface
- */
-export interface IUserTest {
-  // tslint:disable-next-line:semicolon
-  username: string,
-  // tslint:disable-next-line:semicolon
-  password: string,
-  // tslint:disable-next-line:semicolon
-  name: string,
-}

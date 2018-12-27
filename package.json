@@ -1,7 +1,7 @@
 {
-  "name": "hasura-backend",
-  "version": "0.0.1",
-  "description": "This is backend for a todo application given as an internship task",
+  "name": "graphql-todo",
+  "version": "1.0.0",
+  "description": "This is a GraphQL API for todo application",
   "main": "dist/app.js",
   "scripts": {
     "build": "gulp",

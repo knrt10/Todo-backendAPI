@@ -30,11 +30,17 @@ export async function isAuthenticated(context) {
           }));
         } else {
           User.findById(decoded.id).select("password").then((user) => {
-            resolve(new Response(200, "Successfull Response", {
-              success: true,
-              user,
-              token,
-            }));
+            if (!user) {
+              reject(new Response(400, "Sorry No user found", {
+                success: false,
+              }));
+            } else {
+              resolve(new Response(200, "Successfull Response", {
+                success: true,
+                user,
+                token,
+              }));
+            }
           });
         }
       });
