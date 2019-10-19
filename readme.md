@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/knrt10/Todo-backendAPI.svg?branch=master)](https://travis-ci.org/knrt10/Todo-backendAPI)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/97bd422023ea446bab65dbb78fd80a3c)](https://www.codacy.com/app/knrt10/Hasura-Todo-backend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=knrt10/Hasura-Todo-backend&amp;utm_campaign=Badge_Grade)
-[![codecov](https://codecov.io/gh/knrt10/Hasura-Todo-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/knrt10/Hasura-Todo-backend)
+[![codecov](https://codecov.io/gh/knrt10/Todo-backendAPI/branch/master/graph/badge.svg)](https://codecov.io/gh/knrt10/Todo-backendAPI)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
 
 ## Contents
